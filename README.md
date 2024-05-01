@@ -1,6 +1,5 @@
 ### Hi there 👋
 
-![rootshellz github stats](https://github-readme-stats.vercel.app/api?username=rootshellz&show_icons=true&theme=radical)
 ![rootshellz's Stats](https://github-readme-stats.vercel.app/api?username=rootshellz&theme=tokyonight&show_icons=true&hide_border=true&count_private=true)
 ![rootshellz's Streak](https://github-readme-streak-stats.herokuapp.com/?user=rootshellz&theme=tokyonight&hide_border=true&count_private=true)
 
