@@ -66,6 +66,14 @@ The overview contains a contribution graph and aggregate contribution informatio
 Its optional email/company/location row is removed before publication; an unknown
 layout or detected identifying data stops publication. The other cards render
 aggregate statistics, a grade, contribution dates/counts, and language totals.
+The main card shows all-time contributions (`show=contributions`) and hides the
+incomplete commit and contributed-repository rows (`hide=commits,contribs`).
+Private contributions are included to the extent GitHub exposes them through
+profile settings and token access. The grade still uses upstream's underlying
+statistics, including potentially incomplete commit counts; hiding a row does
+not change the grade calculation.
+
+[Main stats display options](https://github-stats-extended.vercel.app/frontend/docs/cards/stats/)
 The PAT is supplied only to generators running on the Actions runner, never to a
 hosted card endpoint. No raw responses, repository lists, or other summary-card
 outputs are staged.

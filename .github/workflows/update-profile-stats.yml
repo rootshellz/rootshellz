@@ -48,7 +48,7 @@ jobs:
         uses: stats-organization/github-readme-stats-action@v2
         with:
           card: stats
-          options: username=rootshellz&theme=tokyonight&show_icons=true&hide_border=true&hide_rank=false&rank_icon=default&disable_animations=true
+          options: username=rootshellz&theme=tokyonight&show_icons=true&hide_border=true&hide=commits,contribs&show=contributions&hide_rank=false&rank_icon=default&disable_animations=true
           path: profile/stats.svg
           token: ${{ secrets.GH_STATS_TOKEN }}
           fail_on_error: true
