@@ -1,6 +1,26 @@
 ### Hi there 👋
 
-![rootshellz's Streak](https://github-readme-streak-stats.herokuapp.com/?user=rootshellz&theme=tokyonight&hide_border=true&count_private=true)
+## GitHub Stats
+
+<p align="center">
+  <img
+    src="https://github-stats-extended.vercel.app/api?username=rootshellz&theme=tokyonight&show_icons=true&hide_border=true"
+    alt="GitHub Stats"
+    height="180"
+  />
+  <img
+    src="https://streak-stats.demolab.com/?user=rootshellz&theme=tokyonight&hide_border=true"
+    alt="GitHub Streak"
+    height="180"
+  />
+</p>
+
+<p align="center">
+  <img
+    src="https://github-stats-extended.vercel.app/api/top-langs/?username=rootshellz&theme=tokyonight&hide_border=true&layout=compact&langs_count=8"
+    alt="Top Languages"
+  />
+</p>
 
 <!--
 **rootshellz/rootshellz** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
