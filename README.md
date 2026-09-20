@@ -3,23 +3,16 @@
 ## GitHub Stats
 
 <p align="center">
-  <img
-    src="https://github-stats-extended.vercel.app/api?username=rootshellz&theme=tokyonight&show_icons=true&hide_border=true"
-    alt="GitHub Stats"
-    height="180"
-  />
-  <img
-    src="https://streak-stats.demolab.com/?user=rootshellz&theme=tokyonight&hide_border=true"
-    alt="GitHub Streak"
-    height="180"
-  />
+  <img src="profile/overview.svg" alt="GitHub contribution history and aggregate profile overview" width="700" />
 </p>
 
 <p align="center">
-  <img
-    src="https://github-stats-extended.vercel.app/api/top-langs/?username=rootshellz&theme=tokyonight&hide_border=true&layout=compact&langs_count=8"
-    alt="Top Languages"
-  />
+  <img src="profile/stats.svg" alt="Aggregate GitHub statistics and rank" width="49%" />
+  <img src="profile/streak.svg" alt="Total contributions, current streak, and longest streak" width="49%" />
+</p>
+
+<p align="center">
+  <img src="profile/languages.svg" alt="Top eight languages by code size across accessible owned repositories" width="450" />
 </p>
 
 <!--

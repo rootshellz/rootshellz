@@ -1,0 +1,129 @@
+name: Update profile stats
+
+on:
+  schedule:
+    - cron: '23 9 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: update-profile-stats
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write # Built-in GITHUB_TOKEN commits only to this profile repository.
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Require statistics token
+        env:
+          GH_STATS_TOKEN: ${{ secrets.GH_STATS_TOKEN }}
+        run: |
+          if [ -z "$GH_STATS_TOKEN" ]; then
+            echo '::error::Create the GH_STATS_TOKEN repository Actions secret first.'
+            exit 1
+          fi
+          mkdir -p profile
+          rm -f profile/overview.svg profile/stats.svg profile/streak.svg profile/languages.svg
+
+      # Upstream supports the release branch rather than a versioned major.
+      - name: Generate profile overview
+        uses: vn7n24fzkq/github-profile-summary-cards@release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_STATS_TOKEN }}
+        with:
+          USERNAME: rootshellz
+          NAME: rootshellz
+          THEME: tokyonight
+          AUTO_PUSH: false
+
+      - name: Generate main stats
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: stats
+          options: username=rootshellz&theme=tokyonight&show_icons=true&hide_border=true&hide_rank=false&rank_icon=default&disable_animations=true
+          path: profile/stats.svg
+          token: ${{ secrets.GH_STATS_TOKEN }}
+          fail_on_error: true
+
+      - name: Generate contribution streak
+        uses: DenverCoder1/github-readme-streak-stats@v1
+        with:
+          options: user=rootshellz&theme=tokyonight&hide_border=true&disable_animations=true&timezone=America%2FDenver
+          path: profile/streak.svg
+          token: ${{ secrets.GH_STATS_TOKEN }}
+
+      - name: Generate languages by code size
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: top-langs
+          options: username=rootshellz&theme=tokyonight&hide_border=true&layout=compact&langs_count=8&size_weight=1&count_weight=0&card_width=450&disable_animations=true
+          path: profile/languages.svg
+          token: ${{ secrets.GH_STATS_TOKEN }}
+          fail_on_error: true
+
+      - name: Remove overview contact details and validate SVGs
+        # Summary cards has no hide-email input. Publish only the sanitized overview;
+        # never stage its other cards, previews, caches, or raw API data.
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import xml.etree.ElementTree as ET
+
+          ns = {'s': 'http://www.w3.org/2000/svg'}
+          ET.register_namespace('', ns['s'])
+          source = Path('profile-summary-card-output/tokyonight/0-profile-details.svg')
+          root = ET.fromstring(source.read_text())
+          panels = root.findall('.//s:g[@transform="translate(30,30)"]', ns)
+          if len(panels) != 1:
+              raise SystemExit('Overview layout changed; review contact removal before publishing.')
+          panel = panels[0]
+          # Keep only the three known aggregate/account-age rows, dropping the
+          # optional email/company/location row and its icon completely.
+          for child in list(panel):
+              tag = child.tag.rsplit('}', 1)[-1]
+              keep = (
+                  tag == 'text' and child.get('y') in {'14', '42', '70'}
+                  or tag == 'g' and child.get('transform') in {
+                      'translate(0,0)', 'translate(0,28)', 'translate(0,56)'
+                  }
+              )
+              if not keep:
+                  panel.remove(child)
+          Path('profile/overview.svg').write_text(ET.tostring(root, encoding='unicode') + '\n')
+
+          for name in ('overview', 'stats', 'streak', 'languages'):
+              path = Path('profile') / f'{name}.svg'
+              data = path.read_text()
+              svg = ET.fromstring(data)
+              if svg.tag != '{http://www.w3.org/2000/svg}svg':
+                  raise SystemExit(f'Invalid SVG: {name}')
+              text = ' '.join(svg.itertext())
+              if re.search(r'@|mailto:|github_pat_|gh[pousr]_|\b[0-9a-f]{40}\b', data, re.I):
+                  # CSS @keyframes are legitimate; all animations are disabled,
+                  # but stats renderers may retain their CSS declarations.
+                  without_css = re.sub(r'<style\b[^>]*>.*?</style>', '', data, flags=re.S)
+                  if re.search(r'@|mailto:|github_pat_|gh[pousr]_|\b[0-9a-f]{40}\b', without_css, re.I):
+                      raise SystemExit(f'Unexpected identifying data in {name}; refusing publication.')
+              if re.search(r'something went wrong|could not fetch|error fetching|rate limit', text, re.I):
+                  raise SystemExit(f'Generator returned an error card: {name}')
+          PY
+
+      - name: Commit all cards together if changed
+        run: |
+          git add -- profile/overview.svg profile/stats.svg profile/streak.svg profile/languages.svg
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Update profile stats'
+          git push
