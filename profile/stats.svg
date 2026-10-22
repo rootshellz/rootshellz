@@ -9,7 +9,7 @@
         aria-labelledby="descId"
       >
         <title id="titleId">Ben Feld&#39;s GitHub Stats, Rank: B+</title>
-        <desc id="descId">Total Stars Earned: 49, Total Contributions: 7563, Total PRs: 360, Total Issues: 3</desc>
+        <desc id="descId">Total Stars Earned: 49, Total Contributions: 7618, Total PRs: 382, Total Issues: 3</desc>
         <style>
           .header {
             font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
@@ -73,7 +73,7 @@
         stroke-dashoffset: 251.32741228718345;
       }
       to {
-        stroke-dashoffset: 121.50781460407964;
+        stroke-dashoffset: 121.39548420273208;
       }
     }
   
@@ -199,7 +199,7 @@
         x="224.01"
         y="12.5"
         data-testid="prs"
-      >360</text>
+      >382</text>
     </g>
   </g><g transform="translate(0, 75)">
     <g class="stagger" style="animation-delay: 900ms" transform="translate(25, 0)">
